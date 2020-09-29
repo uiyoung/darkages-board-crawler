@@ -1,12 +1,14 @@
+import threading
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-import threading
 
 maxPage = 1  # max : 101
 server = 1  # 1: 세오 7:통합
 last_no = 0
 end = False
+
+keywords = ['월영', '쿠라눔', '은각', '수벗']
 
 
 def get_soup(target_url):
@@ -31,7 +33,7 @@ def extract_data(soup):
 
         if int(no) > int(last_no):
             last_no = no
-            if '월영' in title or '쿠라눔' in title:
+            if any(keyword in title for keyword in keywords):
                 print(title, username, datetime)
 
 
@@ -45,4 +47,5 @@ def execute_func(sec):
         threading.Timer(sec, execute_func, [sec]).start()
 
 
-execute_func(3)
+if not end:
+    execute_func(3)
